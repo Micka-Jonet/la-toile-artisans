@@ -1,0 +1,68 @@
+@import '../variables';
+
+.header {
+  position: absolute; // Flotte au-dessus du Hero
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 25px 0;
+  background: transparent; // Fond transparent pour voir l'image BTP derrière
+
+  &__flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: $container-width;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+
+    &__emblem {
+      background: $primary;
+      color: $white;
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 10px rgba($primary, 0.3);
+      transition: $transition-logo;
+    }
+
+    &__emblem:hover {
+        transform: rotate(-10deg) scale(1.05);
+    }
+
+    &__text {
+      color: $white; // Texte en blanc pour ressortir sur l'image sombre
+      font-family: $font-title;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 1.2rem;
+      letter-spacing: -0.5px;
+      line-height: 1;
+
+      span {
+        color: $primary;
+      }
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 30px; // L'espace de 30px que tu as demandé entre tes deux boutons
+    align-items: center;
+  }
+}
+
+// Optionnel : Si tu veux que le header devienne blanc au scroll plus tard, 
+// on pourra ajouter une classe .header--scrolled ici.

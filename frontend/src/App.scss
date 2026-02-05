@@ -1,0 +1,46 @@
+@import 'variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-body;
+  background-color: $white;
+  color: $dark;
+}
+
+// Styles des boutons globaux
+.btn {
+  font-family: $font-title;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  transition: $transition;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &--orange {
+    background: $primary;
+    color: $white;
+    border: 2px solid $primary;
+    &:hover {
+      background: transparent;
+      color: $white; // Devient transparent au survol sur le Hero
+    }
+  }
+
+  &--outline {
+    border: 2px solid $white;
+    color: $white;
+    &:hover {
+      background: $white;
+      color: $dark;
+    }
+  }
+}
