@@ -1,13 +1,18 @@
 @import '../variables';
 
+@keyframes houseBounce {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-5px) rotate(-5deg); }
+}
+
 .header {
-  position: absolute; // Flotte au-dessus du Hero
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 25px 0;
-  background: transparent; // Fond transparent pour voir l'image BTP derrière
+  padding: 20px 0;
+  transition: background 0.3s ease;
 
   &__flex {
     display: flex;
@@ -18,11 +23,13 @@
     padding: 0 20px;
   }
 
+  // --- LOGO ---
   .logo {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
+    z-index: 2001; // Toujours au-dessus du menu mobile
 
     &__emblem {
       background: $primary;
@@ -34,35 +41,79 @@
       align-items: center;
       justify-content: center;
       font-size: 1.4rem;
-      box-shadow: 0 4px 10px rgba($primary, 0.3);
-      transition: $transition-logo;
-    }
-
-    &__emblem:hover {
-        transform: rotate(-10deg) scale(1.05);
+      transition: $transition;
     }
 
     &__text {
-      color: $white; // Texte en blanc pour ressortir sur l'image sombre
+      color: $white;
       font-family: $font-title;
       font-weight: 900;
       text-transform: uppercase;
-      font-size: 1.2rem;
-      letter-spacing: -0.5px;
+      font-size: 1.1rem;
       line-height: 1;
+      span { display: block; color: $primary; font-size: 0.8rem; margin-top: 2px; }
+    }
 
-      span {
-        color: $primary;
+    &:hover {
+      .logo__emblem { transform: scale(1.05); i { animation: houseBounce 0.6s infinite; } }
+    }
+  }
+
+  // --- NAVIGATION (Desktop) ---
+  &__nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    transition: all 0.4s ease-in-out;
+
+    @media (max-width: 768px) {
+      position: fixed;
+      top: 0;
+      right: -100%; // Menu caché
+      width: 100%;
+      height: 100vh;
+      background: $dark;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+      gap: 20px;
+      
+      &--open {
+        right: 0; // Menu affiché
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
       }
     }
   }
 
-  &__nav {
-    display: flex;
-    gap: 30px; // L'espace de 30px que tu as demandé entre tes deux boutons
-    align-items: center;
+  // --- BURGER ---
+  .burger {
+    display: none; // Caché sur PC
+    cursor: pointer;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 2001;
+
+    span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: $white;
+      border-radius: 3px;
+      transition: $transition;
+    }
+
+    @media (max-width: 768px) {
+      display: flex;
+    }
+
+    &--active {
+      span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+      span:nth-child(2) { opacity: 0; }
+      span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+    }
   }
 }
-
-// Optionnel : Si tu veux que le header devienne blanc au scroll plus tard, 
-// on pourra ajouter une classe .header--scrolled ici.
