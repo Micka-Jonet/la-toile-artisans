@@ -1,0 +1,212 @@
+@import '../variables';
+
+// --- ANIMATIONS ---
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+// --- STYLE PRINCIPAL ---
+.artisan-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px 60px;
+  position: relative;
+  
+  // Image de fond avec overlay sombre pour le contraste
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), 
+              url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  &__container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+  }
+
+  // LA CARTE DE CONNEXION
+  .auth-card {
+    background: $white;
+    width: 100%;
+    max-width: 450px;
+    padding: 45px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.5s ease-out;
+
+    &__header {
+      text-align: center;
+      margin-bottom: 35px;
+      
+      h2 { 
+        font-family: $font-title; 
+        font-size: 2.2rem;
+        color: $dark;
+        margin: 0;
+        span { color: $primary; }
+      }
+      p { color: #64748b; margin-top: 10px; font-size: 0.95rem; }
+    }
+  }
+
+  // LE FORMULAIRE
+  .auth-form {
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+      
+      label { 
+        display: block; 
+        margin-bottom: 8px; 
+        font-weight: 600; 
+        color: $dark; 
+        font-size: 0.9rem; 
+      }
+      
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #edf2f7;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fdfdfd;
+
+        &:focus {
+          outline: none;
+          border-color: $primary;
+          background: #fff;
+          box-shadow: 0 0 0 4px rgba($primary, 0.1);
+        }
+      }
+
+      // Gestion des ERREURS
+      &.error {
+        input {
+          border-color: #e74c3c;
+          background-color: #fff8f7;
+          animation: shake 0.3s ease-in-out;
+        }
+        label { color: #e74c3c; }
+      }
+
+      .error-msg {
+        color: #e74c3c;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 6px;
+        display: block;
+      }
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: $primary;
+      color: $white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+
+      &:hover {
+        background: darken($primary, 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba($primary, 0.3);
+      }
+      
+      &:active { transform: translateY(0); }
+    }
+  }
+
+  // FOOTER DE LA CARTE (Bouton d'inscription)
+  .auth-card__footer {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #edf2f7;
+    text-align: center;
+    
+    p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; }
+    
+    .btn-toggle {
+      background: transparent;
+      border: 2px solid $primary;
+      color: $primary;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $primary;
+        color: $white;
+      }
+    }
+  }
+
+  // BOUTON RETOUR (Quand on est sur Register)
+  .register-back {
+    margin-top: 30px;
+    
+    button {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        padding-left: 30px;
+      }
+      
+      i { font-size: 0.9rem; }
+    }
+  }
+}
+
+// Classe utilitaire pour les transitions fluides
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// RESPONSIVE
+@media (max-width: 480px) {
+  .artisan-page {
+    padding: 60px 15px;
+    .auth-card {
+      padding: 30px 20px;
+      &__header h2 { font-size: 1.8rem; }
+    }
+  }
+}

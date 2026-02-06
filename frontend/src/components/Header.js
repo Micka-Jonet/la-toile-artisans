@@ -29,7 +29,7 @@ const Header = () => {
           <Link to="particulier/demande" className="btn btn--orange" onClick={() => setIsMenuOpen(false)}>
             Déposer une demande
           </Link>
-          <Link to="/espace-artisan" className="btn btn--outline" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/artisan/login" className="btn btn--outline" onClick={() => setIsMenuOpen(false)}>
             Espace Artisan
           </Link>
         </nav>

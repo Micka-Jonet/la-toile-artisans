@@ -1,0 +1,101 @@
+@import '../variables';
+
+.register-container {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+
+  .register-header {
+    text-align: center;
+    margin-bottom: 30px;
+    h2 { 
+      font-family: $font-title;
+      font-size: 1.8rem;
+      span { color: $primary; }
+    }
+    p { color: #64748b; font-size: 0.9rem; }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    @media (max-width: 600px) { grid-template-columns: 1fr; }
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #edf2f7;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: 0.3s;
+    
+    &:focus { outline: none; border-color: $primary; }
+    &.error { border-color: #e74c3c; background: #fff8f7; }
+  }
+
+  .err-txt { color: #e74c3c; font-size: 0.75rem; font-weight: 600; margin-top: 5px; display: block; }
+
+  .btn-submit {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    background: $primary;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover { background: darken($primary, 10%); transform: translateY(-2px); }
+    &.loading { opacity: 0.7; cursor: wait; }
+  }
+}
+
+// État succès
+.register-success {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 20px;
+  
+  .success-icon {
+    font-size: 4rem;
+    color: #2ecc71;
+    margin-bottom: 20px;
+    animation: bounceIn 0.6s ease;
+  }
+
+  h2 { font-family: $font-title; margin-bottom: 15px; }
+  p { color: #64748b; margin-bottom: 10px; }
+
+  .btn-finish {
+    margin-top: 25px;
+    padding: 12px 30px;
+    background: $dark;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    &:hover { background: black; }
+  }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
