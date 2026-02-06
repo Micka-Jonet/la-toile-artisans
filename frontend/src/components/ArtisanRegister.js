@@ -1,155 +1,169 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ArtisanRegister.scss';
 
 const ArtisanRegister = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+  
   const [formData, setFormData] = useState({
-    companyName: '',
     siret: '',
-    category: '',
+    companyName: '',
+    address: '',
     email: '',
     phone: '',
     password: ''
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  useEffect(() => {
+    if (formData.siret.length === 14) {
+      handleSiretCheck();
+    }
+  }, [formData.siret]);
 
-  const validate = () => {
+  const handleSiretCheck = async () => {
+    setIsVerifying(true);
+    setErrors({});
+    try {
+      const response = await fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${formData.siret}`);
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        const result = data.results[0];
+        const siege = result.matching_etablissements?.[0] || result.siege;
+        if (result.etat_administratif === 'A') {
+          setFormData(prev => ({
+            ...prev,
+            companyName: result.nom_complet,
+            address: siege.adresse_complete || "Adresse non communiquée"
+          }));
+          setTimeout(() => { setIsVerifying(false); setStep(2); }, 1000);
+        } else {
+          setErrors({ siret: "Entreprise fermée ou inactive." });
+          setIsVerifying(false);
+        }
+      } else {
+        setErrors({ siret: "SIRET inconnu." });
+        setIsVerifying(false);
+      }
+    } catch (error) {
+      setErrors({ siret: "Erreur service public." });
+      setIsVerifying(false);
+    }
+  };
+
+  // --- NOUVELLE LOGIQUE DE VALIDATION ---
+  const validateStep2 = () => {
     let tempErrors = {};
-    
-    // Validation Nom Entreprise
-    if (formData.companyName.trim().length < 2) {
-      tempErrors.companyName = "Le nom doit contenir au moins 2 caractères";
-    }
-
-    // Validation SIRET (14 chiffres exacts)
-    if (!/^\d{14}$/.test(formData.siret)) {
-      tempErrors.siret = "Le SIRET doit contenir exactement 14 chiffres";
-    }
-
-    // Validation Métier
-    if (!formData.category) {
-      tempErrors.category = "Veuillez choisir votre corps de métier";
-    }
-
-    // Validation Email Pro
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
     if (!emailRegex.test(formData.email)) {
-      tempErrors.email = "Format d'email professionnel invalide";
+      tempErrors.email = "Veuillez entrer un email valide.";
     }
-
-    // Validation Téléphone (Format français 10 chiffres)
-    const phoneRegex = /^(0|\+33)[1-9]([-. ]?[0-9]{2}){4}$/;
-    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      tempErrors.phone = "Numéro de téléphone invalide (10 chiffres requis)";
+    if (formData.phone.length !== 10) {
+      tempErrors.phone = "Le numéro doit comporter 10 chiffres.";
     }
-
-    // Validation Mot de passe
     if (formData.password.length < 8) {
-      tempErrors.password = "Le mot de passe doit contenir au moins 8 caractères";
+      tempErrors.password = "Le mot de passe doit faire au moins 8 caractères.";
     }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    // Nettoyer l'erreur dès que l'utilisateur modifie le champ
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: '' });
-    }
+    let cleanValue = value;
+    if (name === 'siret' || name === 'phone') cleanValue = value.replace(/\D/g, '');
+    
+    setFormData({ ...formData, [name]: cleanValue });
+    // On efface l'erreur du champ dès que l'utilisateur modifie
+    if (errors[name]) setErrors({ ...errors, [name]: '' });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      setIsSubmitting(true);
-      console.log("Données envoyées :", formData);
-      
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setIsSuccess(true);
-      }, 2000);
+    if (validateStep2()) {
+      setIsSuccess(true);
     }
   };
 
   if (isSuccess) {
     return (
-      <div className="register-success fade-in">
-        <div className="success-icon"><i className="fas fa-check-double"></i></div>
-        <h2>Demande d'inscription reçue !</h2>
-        <p>Micka, ton entreprise <strong>{formData.companyName}</strong> est en cours de validation.</p>
-        <p>Tu vas recevoir un email de confirmation sous peu.</p>
-        <button onClick={() => window.location.reload()} className="btn-finish">Retour à la connexion</button>
+      <div className="register-container success-view fade-in">
+        <div className="success-icon"><i className="fas fa-check-circle"></i></div>
+        <h2>Inscription validée !</h2>
+        <p>Merci <strong>{formData.companyName}</strong>. <br/>Bienvenue sur La toile des artisans.</p>
+        <button className="btn-finish" onClick={() => navigate('/artisan/dashboard')}>Dashboard</button>
       </div>
     );
   }
 
   return (
     <div className="register-container fade-in">
-      <div className="register-header">
-        <h2>Inscrire mon <span>entreprise</span></h2>
-        <p>Accédez à des chantiers qualifiés près de chez vous</p>
+      <div className="step-indicator">
+        <div className={`step-circle ${step >= 1 ? 'active' : ''}`}>1</div>
+        <div className={`step-line ${step === 2 ? 'active' : ''}`}></div>
+        <div className={`step-circle ${step === 2 ? 'active' : ''}`}>2</div>
       </div>
 
-      <form onSubmit={handleSubmit} className="register-form" noValidate>
-        <div className="form-grid">
-          
-          <div className="form-section">
-            <div className={`input-group ${errors.companyName ? 'error' : ''}`}>
-              <label>Nom de l'entreprise</label>
-              <input type="text" name="companyName" placeholder="ex: Micka Plomberie" onChange={handleChange} />
-              {errors.companyName && <span className="err-txt">{errors.companyName}</span>}
-            </div>
-
-            <div className={`input-group ${errors.siret ? 'error' : ''}`}>
-              <label>N° SIRET</label>
-              <input type="text" name="siret" placeholder="123 456 789 00012" maxLength="14" onChange={handleChange} />
-              {errors.siret && <span className="err-txt">{errors.siret}</span>}
-            </div>
-
-            <div className={`input-group ${errors.category ? 'error' : ''}`}>
-              <label>Métier principal</label>
-              <select name="category" onChange={handleChange}>
-                <option value="">Sélectionnez...</option>
-                <option value="macon">Maçonnerie</option>
-                <option value="plomberie">Plomberie</option>
-                <option value="electricite">Électricité</option>
-                <option value="peinture">Peinture</option>
-              </select>
-              {errors.category && <span className="err-txt">{errors.category}</span>}
-            </div>
+      {step === 1 ? (
+        <div className="step-content">
+          <div className="register-header">
+            <h2>Espace <span>Pro</span></h2>
+            <p>Vérification de votre SIRET</p>
           </div>
-
-          <div className="form-section">
+          <div className={`input-group ${errors.siret ? 'error' : ''}`}>
+            <label>N° SIRET</label>
+            <input 
+              type="text" name="siret" placeholder="Ex: 47976684200724" 
+              maxLength="14" value={formData.siret} onChange={handleInputChange}
+            />
+            {errors.siret && <span className="error-msg">{errors.siret}</span>}
+            {isVerifying && <div className="verifying-tag"><div className="spinner"></div> Analyse...</div>}
+          </div>
+        </div>
+      ) : (
+        <div className="step-content">
+          <div className="register-header">
+            <h2>Vos <span>Coordonnées</span></h2>
+            <p>{formData.companyName}</p>
+          </div>
+          <form onSubmit={handleSubmit} className="register-form" noValidate>
             <div className={`input-group ${errors.email ? 'error' : ''}`}>
               <label>Email Professionnel</label>
-              <input type="email" name="email" placeholder="contact@entreprise.fr" onChange={handleChange} />
-              {errors.email && <span className="err-txt">{errors.email}</span>}
+              <input 
+                type="email" name="email" placeholder="contact@pro.fr" 
+                value={formData.email} onChange={handleInputChange} 
+              />
+              {errors.email && <span className="error-msg">{errors.email}</span>}
             </div>
 
             <div className={`input-group ${errors.phone ? 'error' : ''}`}>
-              <label>Téléphone</label>
-              <input type="tel" name="phone" placeholder="06 00 00 00 00" onChange={handleChange} />
-              {errors.phone && <span className="err-txt">{errors.phone}</span>}
+              <label>Téléphone (10 chiffres)</label>
+              <input 
+                type="tel" name="phone" placeholder="0612345678" 
+                maxLength="10" value={formData.phone} onChange={handleInputChange} 
+              />
+              {errors.phone && <span className="error-msg">{errors.phone}</span>}
             </div>
 
             <div className={`input-group ${errors.password ? 'error' : ''}`}>
-              <label>Mot de passe</label>
-              <input type="password" name="password" placeholder="8 caractères min." onChange={handleChange} />
-              {errors.password && <span className="err-txt">{errors.password}</span>}
+              <label>Mot de passe (8 car. min)</label>
+              <input 
+                type="password" name="password" placeholder="••••••••" 
+                value={formData.password} onChange={handleInputChange} 
+              />
+              {errors.password && <span className="error-msg">{errors.password}</span>}
             </div>
-          </div>
 
+            <button type="submit" className="btn-submit">Créer mon compte</button>
+          </form>
         </div>
-
-        <button type="submit" className={`btn-submit ${isSubmitting ? 'loading' : ''}`} disabled={isSubmitting}>
-          {isSubmitting ? 'Envoi en cours...' : 'Valider mon inscription pro'}
-        </button>
-      </form>
+      )}
     </div>
   );
 };

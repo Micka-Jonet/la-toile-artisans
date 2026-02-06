@@ -12,6 +12,16 @@
   75% { transform: translateX(6px); }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fillLine {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
 // --- STYLE PRINCIPAL ---
 .artisan-page {
   min-height: 100vh;
@@ -19,10 +29,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 20px 60px;
+  padding: 80px 20px;
   position: relative;
   
-  // Image de fond avec overlay sombre pour le contraste
+  // Fond avec overlay
   background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.75)), 
               url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop');
   background-size: cover;
@@ -38,13 +48,13 @@
     z-index: 2;
   }
 
-  // LA CARTE DE CONNEXION
+  // LA CARTE DE CONNEXION / INSCRIPTION
   .auth-card {
     background: $white;
     width: 100%;
     max-width: 450px;
     padding: 45px;
-    border-radius: 20px;
+    border-radius: 24px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
     animation: slideUp 0.5s ease-out;
 
@@ -77,6 +87,33 @@
         font-size: 0.9rem; 
       }
       
+      // Wrapper spécifique pour le mot de passe avec l'oeil
+      .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        input {
+          padding-right: 45px; // Espace pour l'icône
+        }
+
+        .toggle-password {
+          position: absolute;
+          right: 12px;
+          background: none;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          font-size: 1.1rem;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          transition: color 0.2s ease;
+
+          &:hover { color: $primary; }
+        }
+      }
+
       input {
         width: 100%;
         padding: 14px 16px;
@@ -94,7 +131,6 @@
         }
       }
 
-      // Gestion des ERREURS
       &.error {
         input {
           border-color: #e74c3c;
@@ -113,6 +149,38 @@
       }
     }
 
+    // CHECKBOX & OUBLIÉ
+    .login-extras {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: -5px 0 25px;
+      font-size: 0.85rem;
+
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #64748b;
+        font-weight: 500;
+        
+        input {
+          width: 17px;
+          height: 17px;
+          accent-color: $primary;
+          cursor: pointer;
+        }
+      }
+
+      .forgot-link {
+        color: $primary;
+        text-decoration: none;
+        font-weight: 600;
+        &:hover { text-decoration: underline; }
+      }
+    }
+
     .btn-login {
       width: 100%;
       padding: 16px;
@@ -124,19 +192,58 @@
       font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background: darken($primary, 10%);
         transform: translateY(-2px);
         box-shadow: 0 10px 20px rgba($primary, 0.3);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
       }
       
       &:active { transform: translateY(0); }
     }
   }
 
-  // FOOTER DE LA CARTE (Bouton d'inscription)
+  // ÉTAT DE SUCCÈS (Dans la carte)
+  .success-state {
+    text-align: center;
+    padding: 20px 0;
+
+    .success-icon {
+      font-size: 4rem;
+      color: #2ecc71;
+      margin-bottom: 20px;
+    }
+
+    h3 { font-family: $font-title; font-size: 1.6rem; color: $dark; }
+    p { color: #64748b; margin: 8px 0; }
+    .sub { font-size: 0.85rem; font-style: italic; opacity: 0.8; }
+
+    .loader-line-container {
+      width: 100%;
+      height: 5px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      margin-top: 30px;
+      overflow: hidden;
+
+      .loader-line-bar {
+        height: 100%;
+        background: $primary;
+        width: 0%;
+        animation: fillLine 2.5s linear forwards;
+      }
+    }
+  }
+
+  // FOOTER DE LA CARTE
   .auth-card__footer {
     margin-top: 35px;
     padding-top: 25px;
@@ -162,7 +269,7 @@
     }
   }
 
-  // BOUTON RETOUR (Quand on est sur Register)
+  // RETOUR (Register Wrapper)
   .register-back {
     margin-top: 30px;
     
@@ -182,30 +289,22 @@
 
       &:hover {
         background: rgba(255, 255, 255, 0.25);
-        padding-left: 30px;
+        padding-left: 35px;
       }
-      
-      i { font-size: 0.9rem; }
     }
   }
 }
 
-// Classe utilitaire pour les transitions fluides
 .fade-in {
   animation: fadeIn 0.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 // RESPONSIVE
 @media (max-width: 480px) {
   .artisan-page {
-    padding: 60px 15px;
+    padding: 40px 15px;
     .auth-card {
-      padding: 30px 20px;
+      padding: 35px 20px;
       &__header h2 { font-size: 1.8rem; }
     }
   }
