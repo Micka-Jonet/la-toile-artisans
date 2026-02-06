@@ -10,6 +10,7 @@ import ArtisanLogin from './pages/ArtisanLogin';
 
 //Import des composants
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/artisan/login" element={<ArtisanLogin />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }
