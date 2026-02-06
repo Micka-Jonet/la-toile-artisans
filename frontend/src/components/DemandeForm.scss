@@ -1,0 +1,193 @@
+@import '../variables';
+
+.demande-card {
+  background: $white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 550px;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+
+  // --- Barre de Progression ---
+  .progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #edf2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #a0aec0;
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 2;
+
+      &.active {
+        background: $primary;
+        color: $white;
+        box-shadow: 0 0 15px rgba($primary, 0.4);
+      }
+    }
+
+    .step-line {
+      flex: 1;
+      height: 4px;
+      background: #edf2f7;
+      margin: 0 -5px;
+      position: relative;
+      z-index: 1;
+
+      &.active {
+        background: $primary;
+      }
+    }
+  }
+
+  // --- Contenu du Formulaire ---
+  .form-content {
+    h3 {
+      font-family: $font-title;
+      font-size: 1.6rem;
+      color: $dark;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #4a5568;
+        font-size: 0.9rem;
+        
+        i { color: $primary; margin-right: 8px; }
+      }
+
+      input, select, textarea {
+        padding: 14px;
+        border: 2px solid #edf2f7;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary;
+          background: #fff;
+        }
+      }
+
+      textarea {
+        height: 120px;
+        resize: none;
+      }
+
+      small {
+        margin-top: 5px;
+        font-size: 0.8rem;
+        color: #a0aec0;
+        text-align: right;
+        &.valid { color: #48bb78; font-weight: bold; }
+      }
+    }
+  }
+
+  // --- Boutons ---
+  .button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .btn-primary, .btn-submit {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: $primary;
+    color: $white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &:hover:not(:disabled) {
+      background: darken($primary, 5%);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-secondary {
+    background: #f7fafc;
+    border: 2px solid #edf2f7;
+    padding: 16px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover { background: #edf2f7; }
+  }
+
+  // --- Écran de Succès ---
+  &.success-screen {
+    text-align: center;
+    justify-content: center;
+    padding: 60px 40px;
+
+    .success-icon {
+      font-size: 5rem;
+      color: #48bb78;
+      margin-bottom: 20px;
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    h2 { font-family: $font-title; margin-bottom: 15px; }
+    p { color: #718096; line-height: 1.6; margin-bottom: 30px; }
+    
+    .btn-home {
+      @extend .btn-primary;
+      width: auto;
+      margin: 0 auto;
+      padding: 12px 30px;
+    }
+  }
+}
+
+// Animations
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}

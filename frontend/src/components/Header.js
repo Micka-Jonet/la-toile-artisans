@@ -26,7 +26,7 @@ const Header = () => {
         </div>
 
         <nav className={`header__nav ${isMenuOpen ? 'header__nav--open' : ''}`}>
-          <Link to="/demande" className="btn btn--orange" onClick={() => setIsMenuOpen(false)}>
+          <Link to="particulier/demande" className="btn btn--orange" onClick={() => setIsMenuOpen(false)}>
             Déposer une demande
           </Link>
           <Link to="/espace-artisan" className="btn btn--outline" onClick={() => setIsMenuOpen(false)}>
