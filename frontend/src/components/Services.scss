@@ -1,0 +1,112 @@
+@import '../variables';
+
+.services-section {
+  background-color: #fdfdfd; // Un blanc très légèrement cassé
+  padding: 100px 0;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 70px;
+
+  h2 {
+    font-family: $font-title;
+    font-size: 2.4rem;
+    color: $dark;
+    letter-spacing: -1px;
+
+    span {
+      color: $primary;
+      font-weight: 900;
+    }
+  }
+
+  .underline {
+    width: 50px;
+    height: 4px;
+    background-color: $primary;
+    margin: 15px auto 0;
+    border-radius: 10px;
+  }
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.service-card {
+  background: $white;
+  padding: 45px 30px;
+  border-radius: 16px;
+  text-align: center;
+  transition: $transition;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+
+  .icon-circle {
+    width: 75px;
+    height: 75px;
+    background: rgba($primary, 0.08);
+    color: $primary;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 1.8rem;
+    transition: all 0.4s ease;
+  }
+
+  h3 {
+    font-family: $font-title;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    color: $dark;
+  }
+
+  p {
+    color: #777;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .service-link {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: $transition;
+
+    i { transition: transform 0.3s ease; }
+
+    &:hover i {
+      transform: translateX(5px);
+    }
+  }
+
+  // L'effet Hover de la maquette
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-color: rgba($primary, 0.1);
+
+    .icon-circle {
+      background: $primary;
+      color: $white;
+      transform: scale(1.1) rotate(10deg);
+    }
+  }
+}
